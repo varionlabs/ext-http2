@@ -1,0 +1,34 @@
+# phpize/autotools generated files
+/.libs/
+/autom4te.cache/
+/build/
+/Makefile
+/Makefile.fragments
+/Makefile.objects
+/config.h
+/config.h.in
+/config.h.in~
+/config.log
+/config.nice
+/config.status
+/configure
+/configure.ac
+/configure~
+/libtool
+/run-tests.php
+
+# top-level libtool outputs
+/*.la
+/*.lo
+/*.dep
+
+# extension build outputs
+/modules/
+/src/.libs/
+/src/*.lo
+/src/*.dep
+
+# php test outputs
+/tests/*.out
+/tests/*.diff
+/tmp-php.ini
