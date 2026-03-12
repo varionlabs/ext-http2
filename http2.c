@@ -12,7 +12,9 @@ PHP_MINIT_FUNCTION(http2)
     http2_register_http2_constants();
     http2_register_frame_classes();
     http2_register_frame_decoder_class();
+    http2_register_frame_encoder_class();
     http2_register_headers_block_assembler_class();
+    http2_register_event_classes();
 
     return SUCCESS;
 }

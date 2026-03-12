@@ -46,13 +46,21 @@ extern zend_class_entry *http2_ce_window_update_frame;
 extern zend_class_entry *http2_ce_continuation_frame;
 extern zend_class_entry *http2_ce_unknown_frame;
 extern zend_class_entry *http2_ce_frame_decoder;
+extern zend_class_entry *http2_ce_frame_encoder;
 extern zend_class_entry *http2_ce_headers_block_assembler;
+extern zend_class_entry *http2_ce_event;
+extern zend_class_entry *http2_ce_frame_decoded_event;
+extern zend_class_entry *http2_ce_headers_block_completed_event;
+extern zend_class_entry *http2_ce_decoder_error_event;
+extern zend_class_entry *http2_ce_event_factory;
 
 void http2_register_exception_classes(void);
 void http2_register_http2_constants(void);
 void http2_register_frame_classes(void);
 void http2_register_frame_decoder_class(void);
+void http2_register_frame_encoder_class(void);
 void http2_register_headers_block_assembler_class(void);
+void http2_register_event_classes(void);
 
 zend_result http2_create_frame_object(
     uint8_t type,

@@ -32,12 +32,20 @@ It is intentionally not a full HTTP/2 stack.
   - `FrameDecoder::drain(): array`
   - `FrameDecoder::reset(): void`
   - `FrameDecoder::getBufferedLength(): int`
+- Wire encoder:
+  - `FrameEncoder::encode(Frame $frame): string`
 - Header block assembly helper:
   - `HeadersBlockAssembler::push(Frame $frame): void`
   - `HeadersBlockAssembler::isComplete(): bool`
   - `HeadersBlockAssembler::getHeaderBlockFragment(): string`
   - `HeadersBlockAssembler::getStreamId(): int`
   - `HeadersBlockAssembler::reset(): void`
+- Event notifications:
+  - `Event` (abstract)
+  - `FrameDecoded`
+  - `HeadersBlockCompleted`
+  - `DecoderError`
+  - `EventFactory`
 - Constants:
   - `FrameType::{DATA,HEADERS,PRIORITY,RST_STREAM,SETTINGS,PUSH_PROMISE,PING,GOAWAY,WINDOW_UPDATE,CONTINUATION}`
   - `Flag::{END_STREAM,ACK,END_HEADERS,PADDED,PRIORITY}`
@@ -106,6 +114,8 @@ No HPACK decoding is performed in this prototype.
 ├── src
 │   ├── frame.c
 │   ├── frame_decoder.c
+│   ├── frame_encoder.c
+│   ├── event.c
 │   └── headers_block_assembler.c
 └── tests
     ├── frame_helpers.inc
@@ -123,7 +133,11 @@ No HPACK decoding is performed in this prototype.
     ├── 035_push_promise_frame.phpt
     ├── 040_exception_hierarchy.phpt
     ├── 041_payload_length_error.phpt
-    └── 042_stream_state_error.phpt
+    ├── 042_stream_state_error.phpt
+    ├── 050_frame_encoder_roundtrip_data.phpt
+    ├── 051_frame_encoder_roundtrip_multiple.phpt
+    ├── 052_frame_encoder_invalid_input.phpt
+    └── 060_event_factory.phpt
 ```
 
 ## Main classes and responsibilities
@@ -135,9 +149,15 @@ No HPACK decoding is performed in this prototype.
   - Incrementally buffers bytes and emits complete frames.
   - Handles fragmented TCP input.
   - Applies a payload-size guard (`HTTP2_MAX_ALLOWED_FRAME_SIZE = 1 MiB`).
+- `FrameEncoder`:
+  - Converts frame representation objects back into HTTP/2 wire bytes.
+  - Reuses the frame metadata (`type`, `flags`, `streamId`, `payload`) for serialization.
 - `HeadersBlockAssembler`:
   - Reconstructs a single header block from `HEADERS` + `CONTINUATION` on one stream.
   - Detects invalid stream-id transitions.
+- `EventFactory` and event objects:
+  - `EventFactory` creates notification objects.
+  - Event classes are data carriers only and contain no behavior.
 
 ## Current constraints
 

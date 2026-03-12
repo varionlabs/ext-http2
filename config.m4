@@ -4,6 +4,6 @@ PHP_ARG_ENABLE([http2],
   [no])
 
 if test "$PHP_HTTP2" != "no"; then
-  PHP_NEW_EXTENSION([http2], [http2.c src/frame.c src/frame_decoder.c src/headers_block_assembler.c], [$ext_shared])
+  PHP_NEW_EXTENSION([http2], [http2.c src/frame.c src/frame_decoder.c src/frame_encoder.c src/headers_block_assembler.c src/event.c], [$ext_shared])
   PHP_ADD_BUILD_DIR([$ext_builddir/src])
 fi
