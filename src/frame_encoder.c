@@ -31,6 +31,7 @@ PHP_METHOD(Http2FrameEncoder, encode)
     size_t payload_length;
     zend_string *result;
     unsigned char *out;
+    zval validated_frame;
 
     ZEND_PARSE_PARAMETERS_START(1, 1)
         Z_PARAM_OBJECT_OF_CLASS(frame, http2_ce_frame)
@@ -80,6 +81,20 @@ PHP_METHOD(Http2FrameEncoder, encode)
         );
         RETURN_THROWS();
     }
+
+    /* Reuse decoder-side frame construction to enforce identical structural validation rules. */
+    ZVAL_UNDEF(&validated_frame);
+    if (http2_create_frame_object(
+        (uint8_t) type,
+        (uint8_t) flags,
+        (uint32_t) stream_id,
+        (const unsigned char *) Z_STRVAL_P(payload_prop),
+        payload_length,
+        &validated_frame
+    ) != SUCCESS) {
+        RETURN_THROWS();
+    }
+    zval_ptr_dtor(&validated_frame);
 
     result = zend_string_alloc(9 + payload_length, 0);
     out = (unsigned char *) ZSTR_VAL(result);

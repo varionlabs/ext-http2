@@ -137,6 +137,7 @@ No HPACK decoding is performed in this prototype.
     ├── 050_frame_encoder_roundtrip_data.phpt
     ├── 051_frame_encoder_roundtrip_multiple.phpt
     ├── 052_frame_encoder_invalid_input.phpt
+    ├── 053_frame_encoder_structural_validation.phpt
     └── 060_event_factory.phpt
 ```
 
@@ -152,6 +153,7 @@ No HPACK decoding is performed in this prototype.
 - `FrameEncoder`:
   - Converts frame representation objects back into HTTP/2 wire bytes.
   - Reuses the frame metadata (`type`, `flags`, `streamId`, `payload`) for serialization.
+  - Applies the same structural checks used by decoder-side frame parsing.
 - `HeadersBlockAssembler`:
   - Reconstructs a single header block from `HEADERS` + `CONTINUATION` on one stream.
   - Detects invalid stream-id transitions.
